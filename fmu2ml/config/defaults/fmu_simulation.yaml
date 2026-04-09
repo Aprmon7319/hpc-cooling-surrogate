@@ -1,0 +1,77 @@
+# FMU Simulation Parameters
+# Configuration for running FMU simulations
+
+simulation:
+  # System configuration
+  system: "marconi100"
+  use_raps: true
+  
+  # Time parameters
+  start_time: 0.0
+  stop_time: 86400.0  # 24 hours
+  timestep: 60.0  # 1 minute
+  
+  # Solver settings
+  solver:
+    type: "cvode"  # or "euler", "rk4"
+    tolerance: 1e-6
+    max_step_size: 60.0
+    min_step_size: 0.1
+  
+  # Steady-state detection
+  steady_state:
+    enabled: true
+    window_hours: 2.0
+    threshold: 0.1  # 0.1% relative std
+    min_samples: 100
+  
+  # Output configuration
+  output:
+    save_interval: 300.0  # Save every 5 minutes
+    skip_steady_state: true
+    format: "parquet"
+    compression: "snappy"
+  
+  # Memory management
+  memory:
+    max_memory_mb: 8192
+    batch_size: 3600  # Process 1 hour at a time
+    clear_interval: 7200  # Clear cache every 2 hours
+
+parallel:
+  # Parallel execution
+  enabled: true
+  num_processes: 4
+  chunk_size: 21600  # 6 hours per chunk
+  
+  # Load balancing
+  dynamic_allocation: true
+  progress_reporting: true
+  
+  # Error handling
+  max_retries: 3
+  retry_delay: 5.0
+  skip_failed: false
+
+validation:
+  # Input validation
+  validate_inputs: true
+  strict_mode: false
+  
+  # Physical constraints
+  constraints:
+    power_min: 0.0
+    power_max: 50.0
+    temp_min: -10.0
+    temp_max: 100.0
+    
+  # Sanity checks
+  check_energy_balance: true
+  check_temperature_bounds: true
+  check_flow_conservation: true
+
+logging:
+  level: "INFO"
+  file: "simulation.log"
+  console: true
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"

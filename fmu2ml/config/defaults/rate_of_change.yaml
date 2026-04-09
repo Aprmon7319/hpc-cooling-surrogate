@@ -1,0 +1,62 @@
+# Rate of Change Analysis Configuration
+# Analyzes dynamic effects: temporal derivatives and impulse responses
+
+# Output settings
+output_path: "output/analysis/rate_of_change/"
+
+# System configuration (overridable via --system-name)
+# NUM_CDUS is loaded from system config
+
+# Data generation settings
+n_samples: 2000  # Total samples for combined dynamic data
+n_steps: 20      # Number of step changes for impulse analysis
+step_duration: 120  # Duration of each step in time steps
+ramp_duration: 60   # Duration of ramps
+hold_duration: 60   # Hold duration after ramps
+
+# Parallelization settings
+parallel:
+  n_workers: 8
+  threads_per_worker: 1
+  memory_limit: '5GB'
+
+# Input ranges for data generation
+input_ranges:
+  Q_flow: [20.0, 40.0]  # kW
+  T_Air: [288.15, 308.15]  # K (15-35°C)
+  T_ext: [283.15, 313.15]  # K (10-40°C)
+
+# Derivative computation settings
+derivative:
+  dt: 1.0  # Time step for derivative computation
+  smooth_window: 5  # Smoothing window before differentiation
+
+# Lag analysis settings
+lag_analysis:
+  max_lag: 30  # Maximum lag to consider (time steps)
+
+# Impulse detection settings
+impulse_detection:
+  threshold_percentile: 90  # Percentile for detecting significant changes
+  min_change_fraction: 0.1  # Minimum change as fraction of signal range
+  min_duration: 10  # Minimum steps between detected events
+
+# Response analysis settings
+response_analysis:
+  pre_window: 30   # Steps before event for baseline
+  post_window: 60  # Steps after event for response
+  rise_threshold: 0.9  # Threshold for rise time (fraction of final)
+  settling_tolerance: 0.05  # Tolerance for settling (fraction of change)
+
+# Visualization settings
+visualization:
+  max_impulse_plots: 50  # Maximum individual impulse plots
+  sample_window: 500  # Number of samples for time series overlay
+  dpi: 300
+
+# Analysis flags (can be overridden via command line)
+analyses:
+  level_rate: true        # Compare level vs rate effects
+  lag_correlation: true   # Compute lagged correlations
+  impulse_response: true  # Analyze step responses
+  time_series: true       # Create time series overlays

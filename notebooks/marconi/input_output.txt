@@ -1,0 +1,28 @@
+# This script generates 10-hour simulation chunks of the Lassen FMU. 
+# the following shows how to generate input and output data samples
+# cd to fmu2ml-exadigit directory first
+# Make sure the cooling model FMUs are available. 
+
+# generate input
+python -m fmu2ml.data.generators.parallel_input_generator \
+    --duration 10 \
+    --output ../lassen/data \
+    --processes 1 \
+    --chunks 1 \
+    --system-name lassen \
+    --seed 42 \
+    --timestep 1 \
+    --scenario-distribution 0.5 0.45 0.05
+
+
+
+# generate output
+python -m fmu2ml.data.generators.parallel_output_generator \
+    --data-dir ../lassen/data \
+    --chunks all \
+    --parallel 1 \
+    --step-size 5 \
+    --stabilization-hours 3 \
+    --system-name lassen \
+    --resume    \
+    --memory-limit 21800

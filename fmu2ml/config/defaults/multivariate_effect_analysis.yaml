@@ -1,0 +1,79 @@
+# Multivariate Effect Analysis Configuration
+# ============================================
+#
+# This configuration file controls the multivariate effect analysis
+# for FMU input-output relationships.
+
+# Data paths
+data_path: ""  # Path to existing data file (leave empty to generate)
+output_path: "results/multivariate_effect_analysis/"
+
+# Parallelization settings
+parallel:
+  n_workers: 8              # Number of parallel workers
+  threads_per_worker: 1     # Threads per Dask worker
+  memory_limit: '5GB'       # Memory limit per worker
+
+# Data generation settings
+n_samples: 1000             # Number of operating conditions to sample
+transition_steps: 60        # Steps for smooth transitions between conditions
+
+# Input ranges for data generation
+input_ranges:
+  Q_flow: [12.0, 40.0]      # kW (heat load per CDU)
+  T_Air: [288.15, 308.15]   # K (15-35°C inlet air temperature)
+  T_ext: [283.15, 313.15]   # K (10-40°C external temperature)
+
+# Partial Correlation Analysis Settings
+partial_correlation:
+  significance_threshold: 0.05  # p-value threshold for significance
+  edge_threshold: 0.1           # Minimum partial correlation for network edges
+  method: 'pearson'             # Correlation method ('pearson', 'spearman')
+
+# Multiple Regression Analysis Settings
+multiple_regression:
+  vif_threshold: 10.0           # VIF threshold for multicollinearity
+  significance_threshold: 0.05  # p-value threshold for significance
+  standardize: true             # Whether to standardize inputs for beta coefficients
+  bootstrap_samples: 1000       # Number of bootstrap samples for confidence intervals
+
+# Lagged Effect Analysis Settings
+lagged_effect:
+  max_lag: 30                   # Maximum lag to consider (in time steps)
+  min_lag: 0                    # Minimum lag to consider
+  lag_step: 1                   # Step size for lag analysis
+  cv_folds: 5                   # Cross-validation folds for optimal lag selection
+  significance_threshold: 0.05  # p-value threshold for significant lags
+
+# Autocorrelation Analysis Settings  
+autocorrelation:
+  max_lag: 50                   # Maximum lag for autocorrelation
+  confidence_level: 0.95        # Confidence level for significance bands
+  partial_autocorrelation: true # Compute partial autocorrelation (PACF)
+  cross_correlation: true       # Compute cross-correlation between inputs and outputs
+
+# Key outputs for detailed analysis
+key_outputs:
+  - T_prim_r_C              # Primary return temperature
+  - W_flow_CDUP_kW          # CDU pump power consumption  
+  - V_flow_prim_GPM         # Primary flow rate
+  - T_sec_r_C               # Secondary return temperature
+  - p_prim_s_psig           # Primary supply pressure
+  - p_sec_s_psig            # Secondary supply pressure
+
+# Visualization settings
+visualization:
+  dpi: 300                  # Figure resolution
+  network_layout: 'spring'  # Network diagram layout ('spring', 'circular', 'kamada_kawai')
+  color_scheme: 'RdYlBu_r'  # Matplotlib colormap for heatmaps
+  bar_colors:
+    positive: '#2ecc71'     # Color for positive correlations
+    negative: '#e74c3c'     # Color for negative correlations
+    neutral: '#95a5a6'      # Color for non-significant
+
+# Analysis toggles (can be overridden by command line)
+analysis:
+  partial_correlation: true
+  multiple_regression: true  
+  lagged_effects: true
+  autocorrelation: true

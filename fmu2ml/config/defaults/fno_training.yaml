@@ -1,0 +1,77 @@
+# FNO Training Configuration
+# System: Marconi100, Summit, Frontier, Fugaku, or Lassen
+
+system:
+  name: "marconi100"
+  use_raps: true
+  num_cdus: 48
+  min_power: 5.0
+  max_power: 45.0
+
+model:
+  type: "fno"
+  name: "FNO_cooling_v1"
+  
+  # Architecture
+  modes: 16
+  width: 64
+  num_layers: 4
+  last_activation: true
+  
+  # Input/Output
+  in_channels: 49  # 48 CDU powers + 1 ambient temp
+  out_channels: 51  # 48 CDU outlets + 3 facility vars
+
+training:
+  # Data
+  data_path: "data/"
+  train_chunks: [0, 1, 2, 3, 4, 5, 6, 7]
+  val_chunks: [8, 9]
+  test_chunks: [10]
+  
+  # Optimization
+  batch_size: 32
+  learning_rate: 0.001
+  epochs: 100
+  optimizer: "adamw"
+  weight_decay: 0.0001
+  scheduler: "cosine"
+  warmup_epochs: 5
+  
+  # Hardware
+  num_workers: 4
+  mixed_precision: true
+  gradient_clip: 1.0
+  
+  # Physics-informed losses
+  use_physics_loss: true
+  physics_loss_weight: 0.1
+  physics_components:
+    energy_conservation: 1.0
+    temperature_constraints: 0.5
+    monotonicity: 0.3
+    causality: 0.2
+  
+  # Checkpointing
+  checkpoint_dir: "checkpoints/fno"
+  save_interval: 5
+  keep_last_n: 5
+  
+  # Logging
+  log_interval: 10
+  use_wandb: true
+  wandb_project: "fmu2ml"
+  wandb_entity: "hpci-lab"
+
+evaluation:
+  metrics:
+    - "mse"
+    - "mae"
+    - "rmse"
+    - "r2"
+    - "mape"
+  
+  physics_checks:
+    - "energy_balance"
+    - "temperature_bounds"
+    - "flow_conservation"

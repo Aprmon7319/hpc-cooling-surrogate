@@ -1,0 +1,103 @@
+# CDU-Level Comparative Analysis Configuration
+# ============================================
+#
+# This configuration file controls the CDU-level analysis workflow
+# for comparing cooling models across HPC systems.
+
+# Analysis settings
+analysis:
+  # Which analysis stages to run
+  stages:
+    static: true         # Sensitivity, DC gains, operating ranges
+    dynamic: true        # Step response, time constants
+    transfer_function: true  # System identification, poles/zeros
+    comparison: true     # Cross-model comparison
+    
+  # Number of CDUs to sample (if not explicitly specified)
+  n_sample_cdus: 10
+  
+  # Parallelization
+  parallel:
+    enabled: true
+    n_workers: 8
+    scheduler: "processes"  # processes, threads, synchronous
+
+# CDU Response Analyzer
+cdu_response:
+  compute_sensitivities: true
+  compute_io_curves: true
+  fit_polynomial_order: 3
+  
+# Sensitivity Analysis
+sensitivity:
+  finite_diff_step: 0.01
+  central_diff: true
+  normalize_sensitivities: true
+  aggregation_method: "mean"  # mean, max, rms
+  sensitivity_threshold: 0.7
+  compute_sobol: true
+  n_samples_sobol: 1024
+
+# Dynamic Response Analysis
+dynamic:
+  dt: 1.0  # Time step in seconds
+  resample: true
+  settling_threshold: 0.02  # 2% criterion
+  rise_time_thresholds: [0.1, 0.9]  # 10-90% rise time
+  fit_method: "exponential"  # exponential, first_order, second_order
+  compute_frequency_response: true
+  estimate_delay: true
+
+# Transfer Function Analysis
+transfer_function:
+  model_order: 2
+  max_order: 5
+  compute_dc_gain: true
+  compute_poles_zeros: true
+  compute_coupling: true
+  rga_threshold: 0.1
+
+# Visualization
+visualization:
+  enabled: true
+  figsize: [12, 8]
+  dpi: 150
+  style: "seaborn-v0_8-whitegrid"
+  
+  # Which plots to generate
+  plots:
+    sensitivity_heatmaps: true
+    dc_gain_comparison: true
+    step_response: true
+    pole_zero_map: true
+    rga: true
+    sobol_indices: true
+    time_constants: true
+    dashboard: true
+
+# Output settings
+output:
+  save_csv: true
+  save_json: true
+  save_parquet: false
+  generate_report: true
+  
+# # System configurations (override defaults)
+# systems:
+#   marconi100:
+#     num_cdus: 49
+#     description: "Marconi100 - 49 CDUs"
+    
+#   summit:
+#     num_cdus: 257
+#     description: "Summit - 257 CDUs"
+    
+#   frontier:
+#     num_cdus: 25
+#     racks_per_cdu: 3
+#     description: "Frontier - 25 CDUs (3 racks each)"
+
+# Logging
+logging:
+  level: INFO  # DEBUG, INFO, WARNING, ERROR
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"

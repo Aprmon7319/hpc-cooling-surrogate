@@ -1,0 +1,20 @@
+# Data paths
+data_path: "" #path/to/your/data
+output_path: "output/analysis/input_output_effects/"
+
+
+# Parallelization settings
+parallel:
+  n_workers: 8  # Number of parallel FMU simulators
+  threads_per_worker: 1
+  memory_limit: '5GB'
+
+# Data generation settings
+n_samples: 1000
+transition_steps: 60
+
+# Input ranges for sensitivity analysis
+input_ranges:
+  Q_flow: [12.0, 40.0]  # kW
+  T_Air: [288.15, 308.15]  # K (15-35°C)
+  T_ext: [283.15, 313.15]  # K (10-40°C)

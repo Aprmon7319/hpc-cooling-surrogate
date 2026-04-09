@@ -1,0 +1,72 @@
+# DeepONet Training Configuration
+# Operator learning for cooling system
+
+system:
+  name: "marconi100"
+  use_raps: true
+  num_cdus: 49
+
+model:
+  type: "deeponet"
+  name: "DeepONet_cooling_v1"
+  
+  # Branch Network (input functions)
+  branch_net:
+    hidden_dims: [128, 256, 512, 256]
+    activation: "tanh"
+    dropout: 0.1
+    normalization: "layer"
+  
+  # Trunk Network (output locations)
+  trunk_net:
+    hidden_dims: [128, 256, 512, 256]
+    activation: "tanh"
+    dropout: 0.1
+    normalization: "layer"
+  
+  # Operator dimension
+  latent_dim: 128
+  
+  # Architecture details
+  use_bias: true
+  output_transform: "linear"
+  
+  in_dim: 49
+  out_dim: 51
+
+training:
+  data_path: "data/"
+  train_chunks: [0, 1, 2, 3, 4, 5, 6, 7]
+  val_chunks: [8, 9]
+  test_chunks: [10]
+  
+  # Optimization
+  batch_size: 64  # DeepONet can use larger batches
+  learning_rate: 0.002
+  epochs: 100
+  optimizer: "adam"
+  weight_decay: 0.00001
+  patience: 10
+  factor: 0.5
+  
+  # Loss configuration
+  loss_type: "relative_l2"  # Better for operator learning
+  use_physics_loss: true
+  physics_loss_weight: 0.15
+  
+  # Training strategy
+  curriculum_learning: true
+  curriculum_stages:
+    - epochs: 30
+      complexity: "low"
+      sample_ratio: 0.3
+    - epochs: 60
+      complexity: "medium"
+      sample_ratio: 0.6
+    - epochs: 60
+      complexity: "high"
+      sample_ratio: 1.0
+  
+  checkpoint_dir: "checkpoints/deeponet"
+  use_wandb: true
+  wandb_project: "fmu2ml"

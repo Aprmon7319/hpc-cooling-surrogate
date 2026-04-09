@@ -1,0 +1,82 @@
+# System Configuration
+NUM_CDUS: 49
+NUM_BLOCKS: 49  # Usually same as NUM_CDUS
+
+# Output Configuration
+OUTPUT_DIR: "eda_results"
+EDA_PHASE1_DIR: "phase1"
+EDA_PHASE2_DIR: "phase2"
+
+# Data Loading Configuration
+DATA_PATH: null  # Must be specified at runtime
+HDF5_KEY: "data"  # For HDF5 files
+
+# Input Variable Patterns
+INPUT_PATTERNS:
+  power: "simulator_1_datacenter_1_computeBlock_{}_cabinet_1_sources_Q_flow_total"
+  air_temp: "simulator_1_datacenter_1_computeBlock_{}_cabinet_1_sources_T_Air"
+  external_temp: "simulator_1_centralEnergyPlant_1_coolingTowerLoop_1_sources_T_ext"
+
+# Output Variable Patterns
+OUTPUT_PATTERNS:
+  cdu_summary_prefix: "simulator[1].datacenter[1].computeBlock[{}].cdu[1].summary."
+  cdu_metrics:
+    - "V_flow_prim_GPM"
+    - "V_flow_sec_GPM"
+    - "W_flow_CDUP_kW"
+    - "T_prim_s_C"
+    - "T_prim_r_C"
+    - "T_sec_s_C"
+    - "T_sec_r_C"
+    - "p_prim_s_psig"
+    - "p_prim_r_psig"
+    - "p_sec_s_psig"
+    - "p_sec_r_psig"
+  cabinet_htc: "simulator[1].datacenter[1].computeBlock[{}].cabinet[1].summary.htc"
+  datacenter_flow: "simulator[1].datacenter[1].summary.V_flow_prim_GPM"
+  pue: "simulator[1].datacenter[1].summary.pue"
+
+# Analysis Options
+ANALYSIS_OPTIONS:
+  # Scale & Distribution
+  create_violin_plots: true
+  create_histograms: true
+  create_cumulative_plots: true
+  bins_histogram: 50
+  
+  # Statistical Tests
+  normality_test: "shapiro"  # Options: shapiro, ks, anderson
+  normality_alpha: 0.05
+  normality_sample_size: 5000  # Max samples for Shapiro test
+  
+  # Correlation Analysis
+  correlation_method: "pearson"  # Options: pearson, spearman, kendall
+  correlation_threshold: 0.7  # Highlight strong correlations
+  
+  # Outlier Detection
+  outlier_method: "both"  # Options: iqr, zscore, both
+  iqr_multiplier: 1.5
+  zscore_threshold: 3.0
+  
+  # Missing Data
+  missing_data_threshold: 0.05  # Flag variables with >5% missing
+  
+# Visualization Settings
+VIZ_SETTINGS:
+  dpi: 300
+  figure_format: "png"
+  style: "seaborn-v0_8-darkgrid"
+  color_palette: "husl"
+  font_size: 10
+
+# Report Settings
+REPORT_SETTINGS:
+  generate_markdown: true
+  generate_html: false
+  include_code_snippets: false
+  
+# Performance Settings
+PERFORMANCE:
+  parallel_processing: false
+  n_jobs: -1  # Use all available cores
+  chunk_size: 10000  # For large datasets

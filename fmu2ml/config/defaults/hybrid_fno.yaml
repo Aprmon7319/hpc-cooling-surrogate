@@ -1,0 +1,72 @@
+# Hybrid FNO Training Configuration
+# Combines FNO with physics-based residual corrections
+
+system:
+  name: "summit"
+  use_raps: true
+  num_cdus: 48
+
+model:
+  type: "hybrid_fno"
+  name: "HybridFNO_cooling_v1"
+  
+  # FNO Component
+  fno:
+    modes: 16
+    width: 64
+    num_layers: 4
+  
+  # Physics Encoder
+  physics_encoder:
+    hidden_dims: [128, 256, 128]
+    activation: "gelu"
+    dropout: 0.1
+  
+  # Residual Correction Network
+  correction_network:
+    hidden_dims: [64, 64]
+    activation: "relu"
+    use_physics_bias: true
+  
+  in_channels: 49
+  out_channels: 51
+
+training:
+  data_path: "data/"
+  train_chunks: [0, 1, 2, 3, 4, 5, 6, 7]
+  val_chunks: [8, 9]
+  test_chunks: [10]
+  
+  # Two-stage training
+  stage1:
+    # Train FNO only
+    epochs: 50
+    learning_rate: 0.001
+    freeze_physics: true
+  
+  stage2:
+    # Fine-tune with physics correction
+    epochs: 50
+    learning_rate: 0.0001
+    freeze_fno: false
+    physics_loss_weight: 0.2
+  
+  batch_size: 32
+  optimizer: "adamw"
+  weight_decay: 0.0001
+  
+  # Enhanced physics constraints
+  use_physics_loss: true
+  physics_loss_weight: 0.2
+  physics_components:
+    energy_conservation: 1.5
+    temperature_constraints: 1.0
+    monotonicity: 0.5
+    causality: 0.3
+    heat_transfer: 1.0
+    flow_resistance: 0.5
+    thermal_inertia: 0.3
+  
+  checkpoint_dir: "checkpoints/hybrid_fno"
+  use_wandb: true
+  wandb_project: "fmu2ml"
