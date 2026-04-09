@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+import os
 from typing import Dict, Optional
 
 
@@ -29,7 +30,7 @@ class TrainingConfig:
     save_best_only: bool = True
     
     # Logging
-    wandb_api_key: str = "200b677eeeb86f1b039af5886bc26db7e59d9be2"
+    wandb_api_key: str = os.environ.get('WANDB_API_KEY', None)
     log_interval: int = 10
     
     # Physics loss weights
