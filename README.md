@@ -10,7 +10,7 @@
 
 ## Overview
 
-This repository provides deep learning surrogate models that replace computationally expensive FMU-based cooling system simulators within the [ExaDigiT](https://github.com/ORNL/ExaDigiT) digital twin framework for high-performance computing (HPC) data centers.
+This repository provides deep learning surrogate models that replace computationally expensive FMU-based cooling system simulators within the [ExaDigiT]([https://github.com/ORNL/ExaDigiT](https://exadigit.readthedocs.io/)) digital twin framework for high-performance computing (HPC) data centers.
 
 The **Federated DeepM&Mnet** architecture achieves:
 - 📊 **Mean R² = 0.963** across 2,827 output variables (97.2% exceeding R² > 0.8)
