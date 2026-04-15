@@ -30,3 +30,7 @@ This enables real-time cooling optimization, rapid what-if scenario analysis, an
 - **Extensible Design**: Easily adaptable to new configurations via ExaDigiT's AutoCSM module
 
 ---
+
+## Useful Information
+
+- **Data Link**: https://doi.org/10.5281/zenodo.19595930 
