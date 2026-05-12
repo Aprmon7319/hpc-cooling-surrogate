@@ -24,7 +24,7 @@ This enables real-time cooling optimization, rapid what-if scenario analysis, an
 ## Key Features
 
 - **Modular Architecture**: Shared temporal encoder with six specialized decoder heads for heterogeneous output dynamics
-- **Multi-System Support**: Pre-trained models for Summit (257 CDUs), Marconi100 (49 CDUs), and Lassen (44 CDUs) supercomputer configurations
+- **Multi-System Support**: Analysis for Summit (257 CDUs), Marconi100 (49 CDUs), and Lassen (44 CDUs) supercomputer configurations
 - **Comprehensive Data Generation**: Realistic operational scenarios and systematic exploration campaigns
 - **Physics-Informed Option**: Differentiable physics loss framework (though empirically shown to be redundant for high-fidelity FMU data)
 - **Extensible Design**: Easily adaptable to new configurations via ExaDigiT's AutoCSM module
